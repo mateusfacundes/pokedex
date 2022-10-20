@@ -16,8 +16,10 @@ async function doSubmit(){
     const pokemonResponse = await findPokemon(pokemon_name);
     const data = await pokemonResponse.json();
 
-    display_pokemon.innerHTML = '<h3 class="m-3">Nome: '+ data.name +'</h3>';
-
+    let pokedex_number = '000'+data.id;
+    display_pokemon.innerHTML = ' <img class="image" src="https://assets.pokemon.com/assets/cms2/img/pokedex/full/'+ pokedex_number.substr(pokedex_number.length - 3,pokedex_number.length) +'.png" alt="">'
+    display_pokemon.innerHTML += '<h3 class="m-3">Nome: '+ data.name +'</h3>';
+   
     displayTypes(data.types, display_pokemon);
     displayMoves(data.moves, display_pokemon);
    

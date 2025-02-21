@@ -1,5 +1,5 @@
-function findPokemon(pokemon_name) {
-    return fetch('https://pokeapi.co/api/v2/pokemon/' + pokemon_name)
+function findPokemon(url) {
+    return fetch(url)
         .then((data) => {
             return data.json();
         }).catch(error => {
@@ -8,18 +8,48 @@ function findPokemon(pokemon_name) {
         })
 }
 
-const form = document.querySelector('#form');
+function debounce(func, timeout = 300) {
+    let timer;
+    return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => { func.apply(this, args); }, timeout);
+    };
+}
 
-form.addEventListener('submit', el => {
-    el.preventDefault();
-    doSubmit();
-});
+async function findPokemons() {
+    let pokemonName = document.getElementById("pokemon_name").value;
+    console.log(pokemonName)
+    let data = await findPokemon(`http://localhost:8080/pokemons?query=${pokemonName}`)
+    renderPokemonsList(data)
+}
 
-async function doSubmit() {
-    const pokemon_name = document.querySelector('#pokemon_name').value;
+const findPokemonsDebounce = debounce(() => findPokemons());
+
+function renderPokemonsList(data) {
+    const pokemonsList = document.querySelector('#pokemons_list');
+    pokemonsList.innerHTML = data.map(pokemon => `
+        <div 
+            class="badge rounded-pill text-bg-primary pokemon-chip"
+            data-url="${pokemon.url}"
+        >
+            ${pokemon.name}
+        </div>
+    `).join('');
+
+    document.querySelectorAll('.pokemon-chip').forEach(chip => {
+        chip.addEventListener('click', (e) => {
+            e.preventDefault();
+            getPokemon(chip.dataset.url);
+        });
+    });
+}
+
+async function getPokemon(url) {
+    
+    // const pokemon_name = document.querySelector('#pokemon_name').value;
     const display_pokemon = document.querySelector('#display_pokemon');
 
-    const data = await findPokemon(pokemon_name);
+    const data = await findPokemon(url);
 
     display_pokemon.innerHTML = `
                         <img class="pokemon-image" src="${data?.sprites?.other?.showdown?.front_default}"
@@ -62,27 +92,6 @@ function displayTypes(pokemon_types) {
         return `<div class="pokemon-type" style="background-color: ${color}; color: white;">${tyoes.type.name}</div>`
     }).join("")
 }
-
-// function displayMoves(pokemon_moves, display_pokemon) {
-//     const table = document.createElement('table');
-
-//     table.classList.add("table");
-//     display_pokemon.innerHTML += '<h4 class="m-3">Tabela de habilidades</h4>';
-//     table.innerHTML = '<tr>' +
-//         '<th>Nome</td>' +
-//         '<th>Metodo de aprendizado</td>' +
-//         '<th>Level minimo</td>' +
-//         '</tr>';
-//     pokemon_moves.map(moves => {
-//         table.innerHTML += '<tr>' +
-//             '<td>' + moves.move.name + '</td>' +
-//             '<td>' + moves.version_group_details[0].move_learn_method.name + '</td>' +
-//             '<td>' + moves.version_group_details[0].level_learned_at + '</td>' +
-//             '</tr>'
-//     });
-
-//     display_pokemon.append(table);
-// }
 
 function showErrorToast(message) {
     const toastContainer = document.getElementById('toast-container');

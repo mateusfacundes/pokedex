@@ -105,14 +105,17 @@ body {
     padding: 15px;
     border-radius: 10px;
     text-align: center;
+    max-width: 200px;
 }
 
 .pokemon-name {
     color: #dc0a2d;
+    max-width: 200px;
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 10px;
     text-transform: capitalize;
+    text-wrap: pretty;
 }
 
 .pokemon-type {
@@ -168,4 +171,62 @@ body {
 
 #toast-container {
     min-width: 250px;
+}
+
+#pokemons_list {
+    max-height: 200px;
+    overflow-y: auto;
+    /* border: 1px solid #ffffff; */
+    border-radius: 4px;
+    padding: 10px;
+    margin-top: 10px;
+    /* background-color: white; */
+    width: 100%;
+}
+
+#pokemons_list::-webkit-scrollbar {
+    width: 8px;
+}
+
+#pokemons_list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+#pokemons_list::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+#pokemons_list::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+#pokemons_list div {
+    display: inline-block;
+    margin: 3px;
+    padding: 5px 10px;
+    background-color: #dc0a2d;
+    color: white;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+    /* ou outro valor que preferir */
+    text-transform: capitalize;
+}
+
+#pokemons_list div:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+}
+
+.pokemon-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 0.5fr));
+    gap: 10px;
+    margin-bottom: 30px;
 }
